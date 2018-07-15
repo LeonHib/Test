@@ -6,6 +6,8 @@ Written by Leon Hibnik
 IMI Systems ltd. property
 """
 
+__version__ = 1.1
+
 import serial
 import serial.tools.list_ports
 from tkinter import *
