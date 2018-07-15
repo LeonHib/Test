@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-ISD communication and activation vua UART RS-422 asynchronous interface
+ISD communication and activation via UART RS-422 asynchronous interface
 
 Written by Leon Hibnik
 IMI Systems ltd. property
 """
 
-__version__ = 1.1
+__version__ = 1.2
 
 import serial
 import serial.tools.list_ports
 from tkinter import *
+from tkinter import messagebox
 from time import time, sleep
 import serial.rs485
+
 
 # ser = serial.Serial('COM4', 9600, timeout=0)
 # ser2 = serial.Serial("COM7", 9600, timeout=0, )  # TESTING!!!
@@ -80,8 +82,21 @@ class esad_gui:
         self.port_chosen.set("")
         for port in self.ports:
             self.ports_list.append(str(port)[:4])
+        if len(self.ports_list) == 0:
+            self.ports_list.append("No COM Ports")
         self.baud_chosen = StringVar()
         self.baud_chosen.set("9600")
+
+        # *** menu ***
+        self.menubar = Menu(master)
+        self.filemenu = Menu(self.menubar)
+        self.filemenu.add_command(label="Exit", command=self.master.quit)
+        self.menubar.add_cascade(label="File", menu=self.filemenu)
+        self.aboutmenu = Menu(self.menubar, tearoff=0)
+        self.aboutmenu.add_command(label="About", command=self.about)
+        self.menubar.add_cascade(label="About", menu=self.aboutmenu)
+
+        # self.menu.pack()
 
         # *** Buttons ***
         self.frame_buttons = Frame(master, bg="grey", width="250", height="400")
@@ -137,6 +152,8 @@ class esad_gui:
         button_close = Button(self.frame_buttons, text="Stop, Close", command=self.end)
         button_close.pack()
 
+        self.master.config(menu=self.menubar)
+
     def uart_conf(self):
         for line in self.lines:
             line.set("")
@@ -163,6 +180,13 @@ class esad_gui:
         if ser:
             ser.close()
         pass
+
+    @staticmethod
+    def about():
+        messagebox.showinfo("About",
+                            """ISD communication and activation via UART RS-422 interface\n
+                            Written by Leon Hibnik\n
+                            IMI Systems ltd. property""")
 
 
 def disp_msg_ID_RESPONSE(message):
@@ -377,4 +401,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
